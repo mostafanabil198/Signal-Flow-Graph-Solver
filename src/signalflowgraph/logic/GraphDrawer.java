@@ -92,7 +92,7 @@ public class GraphDrawer {
         edge.setFill(Color.TRANSPARENT);
         edge.setStroke(Color.BLACK);
         Text text = new Text(gain);
-        text.setX(sX + 20);
+        text.setX(sX + 8);
         text.setY(sY);
         text.setFill(Color.RED);
         text.setFont(new Font(20));
