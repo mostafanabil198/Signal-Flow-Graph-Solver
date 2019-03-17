@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="597.0" prefWidth="998.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="signalflowgraph.controllers.FlowGraphGuiController">
+    <stylesheets>
+        <URL value="@flowgraphgui.css" />
+    </stylesheets>
+   <children>
+      <AnchorPane fx:id="numOfNodesA" layoutX="38.0" layoutY="63.0" prefHeight="410.0" prefWidth="727.0" visible="false" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="63.0">
+         <children>
+            <Button layoutX="462.0" layoutY="283.0" mnemonicParsing="false" onAction="#setNumberOfNodes" prefHeight="51.0" prefWidth="76.0" text="Next" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="335.0" layoutY="125.0" prefHeight="64.0" prefWidth="329.0" text="ENTER NUMBER OF NODES" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="21.0" />
+               </font>
+            </Label>
+            <TextField fx:id="numOfNodesTF" alignment="CENTER" layoutX="400.0" layoutY="208.0" prefHeight="51.0" prefWidth="200.0" promptText="Number of nodes" />
+         </children>
+      </AnchorPane>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="283.0" layoutY="23.0" prefHeight="64.0" prefWidth="405.0" text="SIGNAL FLOW GRAPH SOLVER" textAlignment="CENTER" underline="true">
+         <font>
+            <Font name="Bernard MT Condensed" size="35.0" />
+         </font>
+      </Label>
+      <AnchorPane fx:id="enterEdgesA" layoutX="38.0" layoutY="63.0" prefHeight="410.0" prefWidth="727.0" visible="false" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="63.0">
+         <children>
+            <Button layoutX="607.0" layoutY="255.0" mnemonicParsing="false" onAction="#addEdge" prefHeight="51.0" prefWidth="76.0" text="Add" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="316.0" layoutY="102.0" prefHeight="64.0" prefWidth="329.0" text="ENTER GRAPH EDGES" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="21.0" />
+               </font>
+            </Label>
+            <TextField fx:id="fromTF" alignment="CENTER" layoutX="381.0" layoutY="185.0" prefHeight="51.0" prefWidth="200.0" promptText="From" />
+            <TextField fx:id="toTF" alignment="CENTER" layoutX="381.0" layoutY="255.0" prefHeight="51.0" prefWidth="200.0" promptText="To" />
+            <Button layoutX="443.0" layoutY="405.0" mnemonicParsing="false" onAction="#showResult" prefHeight="51.0" prefWidth="76.0" text="Next" />
+            <TextField fx:id="gainTF" alignment="CENTER" layoutX="381.0" layoutY="325.0" prefHeight="51.0" prefWidth="200.0" promptText="Gain" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="resultsA" layoutX="38.0" layoutY="63.0" prefHeight="502.0" prefWidth="998.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="63.0">
+         <children>
+            <Button layoutX="416.0" layoutY="359.0" mnemonicParsing="false" onAction="#showGraph" prefHeight="51.0" prefWidth="140.0" text="Show Graph" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="387.0" layoutY="14.0" prefHeight="88.0" prefWidth="184.0" text="Results" textAlignment="CENTER" underline="true">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="21.0" />
+               </font>
+            </Label>
+            <Button layoutX="430.0" layoutY="439.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="113.0" text="Back" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="116.0" prefHeight="51.0" prefWidth="169.0" text="Forward Paths" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="transferFunL" alignment="CENTER" contentDisplay="CENTER" layoutX="665.0" layoutY="219.0" prefHeight="79.0" prefWidth="274.0" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="496.0" layoutY="233.0" prefHeight="51.0" prefWidth="169.0" text="Transfer Function =" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="16.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="forwardPathsTA" editable="false" layoutX="205.0" layoutY="98.0" prefHeight="88.0" prefWidth="274.0" />
+            <TextArea fx:id="loopsTA" editable="false" layoutX="205.0" layoutY="214.0" prefHeight="88.0" prefWidth="274.0" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="232.0" prefHeight="51.0" prefWidth="169.0" text="Loops" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="16.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="nonLoopsTA" editable="false" layoutX="665.0" layoutY="98.0" prefHeight="88.0" prefWidth="274.0" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="496.0" layoutY="116.0" prefHeight="51.0" prefWidth="169.0" text="Non touching loops" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <Label fx:id="errorLbl" alignment="CENTER" layoutX="77.0" layoutY="573.0" prefHeight="21.0" prefWidth="844.0" textAlignment="CENTER" textFill="RED">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="15.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
