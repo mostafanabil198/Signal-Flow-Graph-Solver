@@ -46,8 +46,8 @@ public class Graph {
         nonTouchingWeights = new ArrayList<>();
         nonTouchingCycles = new ArrayList<>();
     }
-    
-    public List<List<Pair<Integer, Integer>>> getGraph(){
+
+    public List<List<Pair<Integer, Integer>>> getGraph() {
         return g;
     }
 
@@ -194,6 +194,7 @@ public class Graph {
     public void findNonTouchingCycles() {
         path = new ArrayList<>();
         boolean valid = true;
+        boolean[] print = new boolean[size]; //no. of nodes
         nonTouchingCycles = (ArrayList<ArrayList<Integer>>) cycles.clone();
         // nonTouchingWeights=(ArrayList<Integer>) cycleWeights.clone();
         for (int i = 0; i < nonTouchingCycles.size(); i++) {
@@ -234,12 +235,33 @@ public class Graph {
                         if (cnt != nonTouchingCycles.get(index).size()) {
                             nonTouchingWeights.add(weight);
                             nonTouchingCycles.add((ArrayList<Integer>) path.clone());
+                            System.out.println("Non-touching loops are: ");
+                            for (int f = 0; f < path.size(); f++) {
+                                System.out.print(path.get(f)+" ");
+                                 if(!print[path.get(f)]){
+                                     print[path.get(f)]=true;
+                                 }
+                                 else{
+                                     System.out.println();
+                                 }
+                            }
                         }
                     } else {
                         nonTouchingWeights.add(weight);
                         nonTouchingCycles.add((ArrayList<Integer>) path.clone());
+                        System.out.println("Non-touching loops are: ");
+                        for (int f = 0; f < path.size(); f++) {
+                                System.out.print(path.get(f)+" ");
+                                 if(!print[path.get(f)]){
+                                     print[path.get(f)]=true;
+                                 }
+                                 else{
+                                     System.out.println();
+                                 }
+                            }
                     }
                 }
+                print=new boolean[size]; //no. of nodes 
                 valid = true;
                 path = new ArrayList();
             }
