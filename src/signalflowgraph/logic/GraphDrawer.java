@@ -5,6 +5,7 @@
  */
 package signalflowgraph.logic;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
@@ -14,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.QuadCurve;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -58,7 +60,7 @@ public class GraphDrawer {
         group.getChildren().add(text);
     }
 
-    private void drawCurvedEdge(double sX, double sY, double eX, double eY, double cX, double cY, String gain) {
+    private void drawCurvedEdge(double sX, double sY, double eX, double eY, double cX, double cY, String gain, boolean up) {
         QuadCurve edge = new QuadCurve(sX, sY, cX, cY, eX, eY);
         edge.setFill(Color.TRANSPARENT);
         edge.setStroke(Color.BLACK);
@@ -71,9 +73,10 @@ public class GraphDrawer {
         text.setStrokeWidth(2);
         group.getChildren().add(edge);
         group.getChildren().add(text);
+        group.getChildren().add(verticalArrow(eX, eY, up));
     }
 
-    private void drawLineEdge(double sX, double sY, double eX, double eY, String gain) {
+    private void drawLineEdge(double sX, double sY, double eX, double eY, String gain, boolean right) {
         Line edge = new Line(sX, sY, eX, eY);
         edge.setStroke(Color.BLACK);
         Text text = new Text(gain);
@@ -85,6 +88,7 @@ public class GraphDrawer {
         text.setStrokeWidth(2);
         group.getChildren().add(edge);
         group.getChildren().add(text);
+        group.getChildren().add(horizontalArrow(eX, eY, right));
     }
 
     private void drawCircleEdge(double sX, double sY, String gain) {
@@ -102,6 +106,45 @@ public class GraphDrawer {
         group.getChildren().add(text);
     }
 
+    private Polygon verticalArrow(double x, double y, boolean up) {
+        Polygon arrow = new Polygon();
+        arrow.setStroke(Color.RED);
+        arrow.setStrokeWidth(4);
+        arrow.setFill(Color.RED);
+        if (up) {
+            arrow.getPoints().addAll(new Double[]{
+                x - 3, y,
+                x, y + 3,
+                x - 6, y + 3});
+        } else {
+            arrow.getPoints().addAll(new Double[]{
+                x - 3, y,
+                x, y - 3,
+                x - 6, y - 3});
+        }
+        return arrow;
+    }
+
+    private Polygon horizontalArrow(double x, double y, boolean right) {
+        Polygon arrow = new Polygon();
+        arrow.setStroke(Color.RED);
+        arrow.setStrokeWidth(4);
+        arrow.setFill(Color.RED);
+        if (right) {
+            arrow.getPoints().addAll(new Double[]{
+                x, y,
+                x - 3, y - 3,
+                x - 3, y + 3});
+        } else {
+            x += 40;
+            arrow.getPoints().addAll(new Double[]{
+                x, y,
+                x + 3, y - 3,
+                x + 3, y + 3});
+        }
+        return arrow;
+    }
+
     private void drawAllNodes() {
         for (int i = 0; i < size; i++) {
             drawNode(100 + i * 100, String.valueOf(i));
@@ -109,6 +152,7 @@ public class GraphDrawer {
     }
 
     private void drawAllEdges() {
+        int z = 0;
         for (int i = 0; i < g.size(); i++) {
             for (int y = 0; y < g.get(i).size(); y++) {
                 double sX = nodes.get(i).getCenterX();
@@ -119,7 +163,7 @@ public class GraphDrawer {
                     sX += 20;
                     eX -= 20;
                     int gain = g.get(i).get(y).getValue();
-                    drawLineEdge(sX, sY, eX, eY, String.valueOf(gain));
+                    drawLineEdge(sX, sY, eX, eY, String.valueOf(gain), i < g.get(i).get(y).getKey());
                     draw[i][g.get(i).get(y).getKey()] = true;
                 } else if (i - g.get(i).get(y).getKey() == 0) {
                     int gain = g.get(i).get(y).getValue();
@@ -127,10 +171,11 @@ public class GraphDrawer {
                     draw[i][g.get(i).get(y).getKey()] = true;
                 } else {
                     double cX = (sX + eX) / 2;
-                    double cY = 400 + Math.pow(-1, i) * Math.abs(sX - eX) * .5;
+                    double cY = 400 + Math.pow(-1, z) * Math.abs(sX - eX) * .5;
                     int gain = g.get(i).get(y).getValue();
-                    drawCurvedEdge(sX, sY + Math.pow(-1, i) * 20, eX, eY + Math.pow(-1, i) * 20, cX, cY, String.valueOf(gain));
+                    drawCurvedEdge(sX, sY + Math.pow(-1, z) * 20, eX, eY + Math.pow(-1, z) * 20, cX, cY, String.valueOf(gain), Math.pow(-1, z) == 1);
                     draw[i][g.get(i).get(y).getKey()] = true;
+                    z++;
                 }
             }
         }
