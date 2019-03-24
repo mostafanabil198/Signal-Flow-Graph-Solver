@@ -21,10 +21,23 @@ public class Graph {
     private boolean[] visited;
     private List<List<Pair<Integer, Integer>>> g;
     private ArrayList<ArrayList<Integer>> pathList;
+
+    public ArrayList<ArrayList<Integer>> getPathList() {
+        return pathList;
+    }
+
+    public ArrayList<ArrayList<Integer>> getCycles() {
+        return cycles;
+    }
+
+    public String getNonTouchingToPrint() {
+        return nonTouchingToPrint;
+    }
     private ArrayList<Integer> pathWeights;
     private ArrayList<ArrayList<Integer>> cycles;
     private ArrayList<Integer> cycleWeights;
     private Stack<Integer> stack;
+    private String nonTouchingToPrint;
     private int[] deltas;
     private int weight;
     private int L;
@@ -34,6 +47,7 @@ public class Graph {
 
     public Graph(int size) {
         this.size = size;
+        nonTouchingToPrint = "";
         visited = new boolean[size];
         g = createGraph(size);
         pathList = new ArrayList<>();
@@ -71,8 +85,23 @@ public class Graph {
             sumOfCycleWeights += cycleWeights.get(i);
         }
         int sumOfNonTouching = 0;
-        for (int i = 0; i < nonTouchingWeights.size(); i++) {
-            sumOfNonTouching += nonTouchingWeights.get(i);
+        int counter = 0;
+        for (int j = cycles.size(); j < nonTouchingCycles.size(); j++) {
+            boolean[] print = new boolean[size];
+            counter = 0;
+            for (int f = 0; f < nonTouchingCycles.get(j).size(); f++) {
+                if (!print[nonTouchingCycles.get(j).get(f)]) {
+                    print[nonTouchingCycles.get(j).get(f)] = true;
+                } else {
+                    counter++;
+                    System.out.println();
+                }
+            }
+            if (counter % 2 == 0) {
+                sumOfNonTouching += nonTouchingWeights.get(j - cycles.size());
+            } else {
+                sumOfNonTouching -= nonTouchingWeights.get(j - cycles.size());
+            }
         }
         denominator = 1 - sumOfCycleWeights + sumOfNonTouching;
         String result = "C(S)/R(S) = " + numerator / gcd(numerator, denominator) + "/" + denominator / gcd(numerator, denominator);
@@ -142,18 +171,31 @@ public class Graph {
                     L *= graph.get(path.get(r)).get(index).getValue();
                 }
                 if (cycleWeights.contains(L)) {
-                    int index = cycleWeights.indexOf(L);
-                    ArrayList<Integer> c = cycles.get(index);
-                    int cnt = 0;
-                    for (int j = 0; j < c.size(); j++) {
-                        if (path.contains(c.get(j))) {
-                            cnt++;
+                    ArrayList<Integer> rep = new ArrayList<>();
+                    for (int xx = 0; xx < cycleWeights.size(); xx++) {
+                        if (L == cycleWeights.get(xx)) {
+                            rep.add(xx);
                         }
                     }
-                    if (cnt != c.size() && cnt != path.size()) {
-                        cycleWeights.add(L);
-                        cycles.add(path);
+                    boolean unique = true;
+                    for (int xy = 0; xy < rep.size(); xy++) {
+                        int ind = rep.get(xy);
+                        ArrayList<Integer> c = cycles.get(ind);
+                        int cnt = 0;
+                        for (int j = 0; j < c.size(); j++) {
+                            if (path.contains(c.get(j))) {
+                                cnt++;
+                            }
+                        }
+                        if (cnt == c.size() && cnt == path.size()) {
+                            unique = false;
+                        }     
                     }
+                    if (unique) {
+                            cycleWeights.add(L);
+                            cycles.add(path);
+                        }
+                    //int index = cycleWeights.indexOf(L);
                 } else {
                     cycleWeights.add(L);
                     cycles.add(path);
@@ -225,43 +267,63 @@ public class Graph {
                     }
                     int weight = firstWeight * secondWeight;
                     if (nonTouchingWeights.contains(weight)) {
-                        int index = cycleWeights.size() + nonTouchingWeights.indexOf(weight);
-                        int cnt = 0;
-                        for (int r = 0; r < nonTouchingCycles.get(index).size(); r++) {
-                            if (path.contains(nonTouchingCycles.get(index).get(r))) {
-                                cnt++;
+                        ArrayList<Integer> rep = new ArrayList<>();
+                        for (int xx = 0; xx < nonTouchingWeights.size(); xx++) {
+                            if (weight == nonTouchingWeights.get(xx)) {
+                                rep.add(xx);
                             }
                         }
-                        if (cnt != nonTouchingCycles.get(index).size()) {
+                        boolean unique = true;
+                        for (int xy = 0; xy < rep.size(); xy++) {
+                            int ind = rep.get(xy);
+                            int index = cycleWeights.size() + ind;
+                            int cnt = 0;
+                            for (int r = 0; r < nonTouchingCycles.get(index).size(); r++) {
+                                if (path.contains(nonTouchingCycles.get(index).get(r))) {
+                                    cnt++;
+                                }
+                            }
+                            
+                            
+                            if (cnt == path.size()) {
+                                unique = false;
+                            }
+                            print = new boolean[size];
+                        }
+                        if (unique) {
                             nonTouchingWeights.add(weight);
                             nonTouchingCycles.add((ArrayList<Integer>) path.clone());
                             System.out.println("Non-touching loops are: ");
+                            nonTouchingToPrint += "Non-touching loop:\n";
                             for (int f = 0; f < path.size(); f++) {
-                                System.out.print(path.get(f)+" ");
-                                 if(!print[path.get(f)]){
-                                     print[path.get(f)]=true;
-                                 }
-                                 else{
-                                     System.out.println();
-                                 }
+                                System.out.print(path.get(f) + " ");
+                                nonTouchingToPrint += path.get(f) + " ";
+                                if (!print[path.get(f)]) {
+                                    print[path.get(f)] = true;
+                                } else {
+                                    System.out.println();
+                                    nonTouchingToPrint += "\n";
+                                }
                             }
                         }
                     } else {
                         nonTouchingWeights.add(weight);
                         nonTouchingCycles.add((ArrayList<Integer>) path.clone());
                         System.out.println("Non-touching loops are: ");
+                        nonTouchingToPrint += "Non-touching loop:\n";
                         for (int f = 0; f < path.size(); f++) {
-                                System.out.print(path.get(f)+" ");
-                                 if(!print[path.get(f)]){
-                                     print[path.get(f)]=true;
-                                 }
-                                 else{
-                                     System.out.println();
-                                 }
+                            System.out.print(path.get(f) + " ");
+                            nonTouchingToPrint += path.get(f) + " ";
+                            if (!print[path.get(f)]) {
+                                print[path.get(f)] = true;
+                            } else {
+                                System.out.println();
+                                nonTouchingToPrint += "\n";
                             }
+                        }
                     }
                 }
-                print=new boolean[size]; //no. of nodes 
+                print = new boolean[size]; //no. of nodes 
                 valid = true;
                 path = new ArrayList();
             }

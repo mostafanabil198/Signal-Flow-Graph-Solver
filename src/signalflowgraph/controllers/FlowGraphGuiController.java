@@ -24,23 +24,23 @@ import signalflowgraph.logic.GraphDrawer;
  * @author arabtech
  */
 public class FlowGraphGuiController implements Initializable {
-
+    
     private int size;
     private Graph g;
     private GraphDrawer gd;
-
+    
     @FXML
     AnchorPane numOfNodesA, enterEdgesA, resultsA;
-
+    
     @FXML
     TextField numOfNodesTF, fromTF, toTF, gainTF;
-
+    
     @FXML
     Label transferFunL, errorLbl;
-
+    
     @FXML
     TextArea forwardPathsTA, loopsTA, nonLoopsTA;
-
+    
     @FXML
     public void setNumberOfNodes() {
         String nodes = numOfNodesTF.getText();
@@ -54,7 +54,7 @@ public class FlowGraphGuiController implements Initializable {
             errorLbl.setText("Wrong Input!, Enter integer number");
         }
     }
-
+    
     @FXML
     public void addEdge() {
         try {
@@ -70,28 +70,37 @@ public class FlowGraphGuiController implements Initializable {
             errorLbl.setText("Wrong Input!, Enter integer number");
         }
     }
-
+    
     @FXML
     public void showResult() {
         enterEdgesA.setVisible(false);
+        String result = g.getTransferFunction(0, size - 1);
         resultsA.setVisible(true);
-        
-//        forwardPathsTA =
-//        loopsTA = 
-//        nonLoopsTA = 
-        transferFunL.setText(g.getTransferFunction(0, size));
+        String paths = "";
+        System.out.println(g.getPathList().size());
+        for (int i = 0; i < g.getPathList().size(); i++) {
+            paths += g.getPathList().get(i) + "\n";
+        }
+        forwardPathsTA.setText(paths);
+        String cycles = "";
+        for (int i = 0; i < g.getCycles().size(); i++) {
+            cycles += g.getCycles().get(i) + "\n";
+        }
+        loopsTA.setText(cycles);
+        nonLoopsTA.setText(g.getNonTouchingToPrint());
+        transferFunL.setText(result);
         
     }
     
     @FXML
-    public void showGraph(){
+    public void showGraph() {
         gd = new GraphDrawer(size, g.getGraph());
         Stage stage = new Stage();
         stage.setTitle("My New Stage Title");
         stage.setScene(new Scene(gd.getGroup(), 1800, 800));
         stage.show();
     }
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         numOfNodesA.setVisible(true);
@@ -103,5 +112,5 @@ public class FlowGraphGuiController implements Initializable {
         gainTF.clear();
         errorLbl.setText("");
     }
-
+    
 }
