@@ -73,8 +73,8 @@ public class Graph {
         path = new ArrayList<>();
         visited = new boolean[size];
         findCycles(0, g);
-        findDeltas();
         findNonTouchingCycles();
+        findDeltas();
         long numerator = 0;
         for (int i = 0; i < pathList.size(); i++) {
             numerator += pathWeights.get(i) * deltas[i];
@@ -189,12 +189,12 @@ public class Graph {
                         }
                         if (cnt == c.size() && cnt == path.size()) {
                             unique = false;
-                        }     
+                        }
                     }
                     if (unique) {
-                            cycleWeights.add(L);
-                            cycles.add(path);
-                        }
+                        cycleWeights.add(L);
+                        cycles.add(path);
+                    }
                     //int index = cycleWeights.indexOf(L);
                 } else {
                     cycleWeights.add(L);
@@ -214,21 +214,42 @@ public class Graph {
     public void findDeltas() {
         boolean valid = true;
         for (int i = 0; i < pathList.size(); i++) {
-            for (int k = 0; k < cycles.size(); k++) {
+            for (int k = 0; k < nonTouchingCycles.size(); k++) {
                 for (int j = 0; j < pathList.get(i).size(); j++) {
-                    if (cycles.get(k).contains(pathList.get(i).get(j))) {
+                    if (nonTouchingCycles.get(k).contains(pathList.get(i).get(j))) {
                         valid = false;
                         break;
                     }
                 }
                 if (valid) {
-                    deltas[i] += cycleWeights.get(k);
+                    int counter = 0;
+                    boolean[] print = new boolean[size];
+                    for (int f = 0; f < nonTouchingCycles.get(k).size(); f++) {
+                        if (!print[nonTouchingCycles.get(k).get(f)]) {
+                            print[nonTouchingCycles.get(k).get(f)] = true;
+                        } else {
+                            counter++;
+                        }
+                    }
+                    if (counter % 2 == 0) {
+                        if (k < cycleWeights.size()) {
+                            deltas[i] += cycleWeights.get(k);
+                        } else {
+                            deltas[i] += nonTouchingWeights.get(k - cycleWeights.size());
+                        }
+                    } else {
+                        if (k < cycleWeights.size()) {
+                            deltas[i] -= cycleWeights.get(k);
+                        } else {
+                            deltas[i] -= nonTouchingWeights.get(k - cycleWeights.size());
+                        }
+                    }
                 }
                 valid = true;
             }
         }
         for (int i = 0; i < deltas.length; i++) {
-            deltas[i] = 1 - deltas[i];
+            deltas[i] = 1 + deltas[i];
             //System.out.println(deltas[i]);
         }
     }
@@ -237,6 +258,7 @@ public class Graph {
         path = new ArrayList<>();
         boolean valid = true;
         boolean[] print = new boolean[size]; //no. of nodes
+        int[] freqArray = new int[size];
         nonTouchingCycles = (ArrayList<ArrayList<Integer>>) cycles.clone();
         // nonTouchingWeights=(ArrayList<Integer>) cycleWeights.clone();
         for (int i = 0; i < nonTouchingCycles.size(); i++) {
@@ -247,11 +269,13 @@ public class Graph {
                         break;
                     } else {
                         path.add(nonTouchingCycles.get(i).get(k));
+                        freqArray[nonTouchingCycles.get(i).get(k)]++;
                     }
                 }
                 if (valid) {
                     for (int z = 0; z < nonTouchingCycles.get(j).size(); z++) {
                         path.add(nonTouchingCycles.get(j).get(z));
+                        freqArray[nonTouchingCycles.get(j).get(z)]++;
                     }
                     int firstWeight;
                     int secondWeight;
@@ -278,14 +302,17 @@ public class Graph {
                             int ind = rep.get(xy);
                             int index = cycleWeights.size() + ind;
                             int cnt = 0;
+                            int[] cloneArray = freqArray.clone();
                             for (int r = 0; r < nonTouchingCycles.get(index).size(); r++) {
-                                if (path.contains(nonTouchingCycles.get(index).get(r))) {
+                                cloneArray[nonTouchingCycles.get(index).get(r)]--;
+                            }
+
+                            for (int zz = 0; zz < cloneArray.length; zz++) {
+                                if (cloneArray[zz] == 0) {
                                     cnt++;
                                 }
                             }
-                            
-                            
-                            if (cnt == path.size()) {
+                            if (cnt == cloneArray.length) {
                                 unique = false;
                             }
                             print = new boolean[size];
@@ -324,6 +351,7 @@ public class Graph {
                     }
                 }
                 print = new boolean[size]; //no. of nodes 
+                freqArray = new int[size];
                 valid = true;
                 path = new ArrayList();
             }
