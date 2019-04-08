@@ -24,23 +24,23 @@ import signalflowgraph.logic.GraphDrawer;
  * @author arabtech
  */
 public class FlowGraphGuiController implements Initializable {
-    
+
     private int size;
     private Graph g;
     private GraphDrawer gd;
-    
+
     @FXML
     AnchorPane numOfNodesA, enterEdgesA, resultsA;
-    
+
     @FXML
     TextField numOfNodesTF, fromTF, toTF, gainTF;
-    
+
     @FXML
     Label transferFunL, errorLbl;
-    
+
     @FXML
-    TextArea forwardPathsTA, loopsTA, nonLoopsTA;
-    
+    TextArea forwardPathsTA, loopsTA, nonLoopsTA, deltasTA;
+
     @FXML
     public void setNumberOfNodes() {
         String nodes = numOfNodesTF.getText();
@@ -54,23 +54,27 @@ public class FlowGraphGuiController implements Initializable {
             errorLbl.setText("Wrong Input!, Enter integer number");
         }
     }
-    
+
     @FXML
     public void addEdge() {
         try {
             int fromN = Integer.parseInt(fromTF.getText());
             int toN = Integer.parseInt(toTF.getText());
             int gainN = Integer.parseInt(gainTF.getText());
-            g.addEdge(fromN, toN, gainN);
-            fromTF.clear();
-            toTF.clear();
-            gainTF.clear();
-            errorLbl.setText("");
+            if (fromN >= g.getSize() || fromN < 0 || toN >= g.getSize() || toN < 0) {
+                errorLbl.setText("Wrong Input!, Node number is out of bound");
+            } else {
+                g.addEdge(fromN, toN, gainN);
+                fromTF.clear();
+                toTF.clear();
+                gainTF.clear();
+                errorLbl.setText("");
+            }
         } catch (Exception e) {
             errorLbl.setText("Wrong Input!, Enter integer number");
         }
     }
-    
+
     @FXML
     public void showResult() {
         enterEdgesA.setVisible(false);
@@ -89,9 +93,16 @@ public class FlowGraphGuiController implements Initializable {
         loopsTA.setText(cycles);
         nonLoopsTA.setText(g.getNonTouchingToPrint());
         transferFunL.setText(result);
-        
+        String deltas = "Delta = ";
+        deltas += g.getDenominator();
+        deltas += "\n";
+        for (int i = 0; i < g.getDeltas().length; i++) {
+            deltas += "delta " + i + " = " + g.getDeltas()[i];
+        }
+        deltasTA.setText(deltas);
+
     }
-    
+
     @FXML
     public void showGraph() {
         gd = new GraphDrawer(size, g.getGraph());
@@ -100,7 +111,12 @@ public class FlowGraphGuiController implements Initializable {
         stage.setScene(new Scene(gd.getGroup(), 1800, 800));
         stage.show();
     }
-    
+
+    @FXML
+    public void exit() {
+        System.exit(0);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         numOfNodesA.setVisible(true);
@@ -112,5 +128,5 @@ public class FlowGraphGuiController implements Initializable {
         gainTF.clear();
         errorLbl.setText("");
     }
-    
+
 }

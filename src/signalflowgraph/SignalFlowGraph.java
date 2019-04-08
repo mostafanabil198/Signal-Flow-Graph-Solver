@@ -30,7 +30,7 @@ public class SignalFlowGraph extends Application {
         Parent root1;
         root1 = FXMLLoader.load(getClass().getResource("views/FlowGraphGui.fxml"));
         Stage stage = new Stage();
-        stage.setTitle("ABC");
+        stage.setTitle("Signal Flow Graph");
         stage.setScene(new Scene(root1));
         stage.show();
     }

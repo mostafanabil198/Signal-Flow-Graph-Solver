@@ -18,21 +18,10 @@ import javafx.util.Pair;
 public class Graph {
 
     private int size;
+    long denominator;
     private boolean[] visited;
     private List<List<Pair<Integer, Integer>>> g;
     private ArrayList<ArrayList<Integer>> pathList;
-
-    public ArrayList<ArrayList<Integer>> getPathList() {
-        return pathList;
-    }
-
-    public ArrayList<ArrayList<Integer>> getCycles() {
-        return cycles;
-    }
-
-    public String getNonTouchingToPrint() {
-        return nonTouchingToPrint;
-    }
     private ArrayList<Integer> pathWeights;
     private ArrayList<ArrayList<Integer>> cycles;
     private ArrayList<Integer> cycleWeights;
@@ -79,7 +68,7 @@ public class Graph {
         for (int i = 0; i < pathList.size(); i++) {
             numerator += pathWeights.get(i) * deltas[i];
         }
-        long denominator = 0;
+        denominator = 0;
         int sumOfCycleWeights = 0;
         for (int i = 0; i < cycleWeights.size(); i++) {
             sumOfCycleWeights += cycleWeights.get(i);
@@ -356,6 +345,30 @@ public class Graph {
                 path = new ArrayList();
             }
         }
+    }
+
+    public ArrayList<ArrayList<Integer>> getPathList() {
+        return pathList;
+    }
+
+    public ArrayList<ArrayList<Integer>> getCycles() {
+        return cycles;
+    }
+
+    public String getNonTouchingToPrint() {
+        return nonTouchingToPrint;
+    }
+
+    public int[] getDeltas() {
+        return deltas;
+    }
+
+    public long getDenominator() {
+        return denominator;
+    }
+    
+    public int getSize(){
+        return size;
     }
 
     public long gcd(long a, long b) {

@@ -45,13 +45,11 @@
       </AnchorPane>
       <AnchorPane fx:id="resultsA" layoutX="38.0" layoutY="63.0" prefHeight="502.0" prefWidth="998.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="63.0">
          <children>
-            <Button layoutX="416.0" layoutY="359.0" mnemonicParsing="false" onAction="#showGraph" prefHeight="51.0" prefWidth="140.0" text="Show Graph" />
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="387.0" layoutY="14.0" prefHeight="88.0" prefWidth="184.0" text="Results" textAlignment="CENTER" underline="true">
                <font>
                   <Font name="Arial Rounded MT Bold" size="21.0" />
                </font>
             </Label>
-            <Button layoutX="430.0" layoutY="439.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="113.0" text="Back" />
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="116.0" prefHeight="51.0" prefWidth="169.0" text="Forward Paths" textAlignment="CENTER">
                <font>
                   <Font name="Arial Rounded MT Bold" size="16.0" />
@@ -80,6 +78,14 @@
                   <Font name="Arial Rounded MT Bold" size="16.0" />
                </font>
             </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="233.0" layoutY="345.0" prefHeight="51.0" prefWidth="169.0" text="Deltas" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="16.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="deltasTA" editable="false" layoutX="402.0" layoutY="327.0" prefHeight="88.0" prefWidth="274.0" />
+            <Button layoutX="441.0" layoutY="434.0" mnemonicParsing="false" onAction="#showGraph" prefHeight="51.0" prefWidth="140.0" text="Show Graph" />
+            <Button layoutX="454.0" layoutY="497.0" mnemonicParsing="false" onAction="#exit" prefHeight="51.0" prefWidth="113.0" text="Exit" />
          </children>
       </AnchorPane>
       <Label fx:id="errorLbl" alignment="CENTER" layoutX="77.0" layoutY="573.0" prefHeight="21.0" prefWidth="844.0" textAlignment="CENTER" textFill="RED">
